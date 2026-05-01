@@ -270,8 +270,11 @@ export const AuthPage = () => {
                   {/* Password Strength Meter (Sign Up only) */}
                   {!isLogin && formData.password.length > 0 && (
                      <div className="space-y-1 mt-1">
-                        <div className="flex h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
-                           <div className={`h-full transition-all duration-300 ${strengthColors[passStrength]}`} style={{ width: `${(passStrength / 4) * 100}%` }}></div>
+                        <div className="flex gap-1 h-1.5 w-full">
+                           <div className={`flex-1 rounded-full transition-all duration-300 ${passStrength >= 1 ? strengthColors[passStrength] : 'bg-white/10'}`}></div>
+                           <div className={`flex-1 rounded-full transition-all duration-300 ${passStrength >= 2 ? strengthColors[passStrength] : 'bg-white/10'}`}></div>
+                           <div className={`flex-1 rounded-full transition-all duration-300 ${passStrength >= 3 ? strengthColors[passStrength] : 'bg-white/10'}`}></div>
+                           <div className={`flex-1 rounded-full transition-all duration-300 ${passStrength >= 4 ? strengthColors[passStrength] : 'bg-white/10'}`}></div>
                         </div>
                         <p className={`text-xs font-medium text-right ${strengthColors[passStrength].replace('bg-', 'text-')}`}>
                           {strengthLabels[passStrength]}

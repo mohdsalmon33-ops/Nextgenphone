@@ -17,10 +17,8 @@ import { Features } from './components/Features';
 import { Testimonials } from './components/Testimonials';
 import { Newsletter } from './components/Newsletter';
 import { WishlistDrawer } from './components/WishlistDrawer';
-import { AuthPage } from './components/AuthPage';
 
 export default function App() {
-  const { user } = useStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState(2000);
@@ -69,15 +67,6 @@ export default function App() {
 
     return result;
   }, [searchTerm, selectedBrands, priceRange, sortOption]);
-
-  if (!user) {
-    return (
-      <>
-        <AuthPage />
-        <Toasts />
-      </>
-    );
-  }
 
   return (
     <div className="min-h-screen relative selection:bg-violet-500/30">

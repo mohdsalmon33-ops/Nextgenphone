@@ -26,8 +26,7 @@ interface StoreContextType {
   
   // Auth
   user: User | null;
-  login: (credentials: Partial<User>) => boolean;
-  register: (user: User) => boolean;
+  login: (user: User) => void;
   logout: () => void;
   
   // UI State
@@ -71,10 +70,6 @@ export const StoreProvider: React.FC<{children: React.ReactNode}> = ({ children 
     try { const item = localStorage.getItem('user'); return item ? JSON.parse(item) : null; } catch { return null; }
   });
   
-  const [users, setUsers] = useState<User[]>(() => {
-    try { const items = localStorage.getItem('users'); return items ? JSON.parse(items) : []; } catch { return []; }
-  });
-  
   const [compareList, setCompareList] = useState<Product[]>([]);
   const [promoDiscount, setPromoDiscount] = useState(0);
   
@@ -100,8 +95,6 @@ export const StoreProvider: React.FC<{children: React.ReactNode}> = ({ children 
     if (user) localStorage.setItem('user', JSON.stringify(user)); 
     else localStorage.removeItem('user');
   }, [user]);
-
-  useEffect(() => { localStorage.setItem('users', JSON.stringify(users)); }, [users]);
 
   // Theme Sync
   useEffect(() => {
@@ -175,32 +168,9 @@ export const StoreProvider: React.FC<{children: React.ReactNode}> = ({ children 
     });
   };
 
-  const login = (credentials: Partial<User>) => {
-    // Demo bypass
-    if (credentials.email === 'demo@nexgen.com' && !credentials.password) {
-       setUser({ name: 'Demo User', email: 'demo@nexgen.com' });
-       addToast(`Welcome back, Demo User! 👋`, 'success');
-       return true;
-    }
-    
-    // Check against registered users
-    const existing = users.find(u => u.email === credentials.email && u.password === credentials.password);
-    if (existing) {
-       setUser({ name: existing.name, email: existing.email });
-       addToast(`Welcome back, ${existing.name}! 👋`, 'success');
-       return true;
-    }
-    return false;
-  };
-
-  const register = (newUser: User) => {
-    if (users.find(u => u.email === newUser.email)) {
-      return false; // Email exists
-    }
-    setUsers(prev => [...prev, newUser]);
-    setUser({ name: newUser.name, email: newUser.email });
-    addToast(`Account created! Welcome, ${newUser.name}! 🎉`, 'success');
-    return true;
+  const login = (userData: User) => {
+    setUser(userData);
+    addToast(`Welcome back, ${userData.name}!`, 'success');
   };
 
   const logout = () => {
@@ -214,7 +184,7 @@ export const StoreProvider: React.FC<{children: React.ReactNode}> = ({ children 
       cart, addToCart, removeFromCart, updateQuantity, cartTotal, cartCount, promoDiscount, applyPromo,
       wishlist, toggleWishlist,
       compareList, toggleCompare,
-      user, login, register, logout,
+      user, login, logout,
       isCartOpen, setIsCartOpen,
       isWishlistOpen, setIsWishlistOpen,
       isCompareOpen, setIsCompareOpen,

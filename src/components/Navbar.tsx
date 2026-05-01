@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../store';
 import { ShoppingCart, Heart, User, Search, Moon, Sun, Menu, X, LogOut, Settings } from 'lucide-react';
+import { AuthModal } from './AuthModal';
 
 interface NavbarProps {
   searchTerm: string;
@@ -9,6 +10,7 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ searchTerm, setSearchTerm }) => {
   const { isDark, toggleTheme, cartCount, wishlist, setIsCartOpen, setIsWishlistOpen, user, logout } = useStore();
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
 
@@ -30,7 +32,6 @@ export const Navbar: React.FC<NavbarProps> = ({ searchTerm, setSearchTerm }) => 
                 <a href="#" className="hover:text-blue-500 transition-colors">Home</a>
                 <a href="#phones" className="hover:text-blue-500 transition-colors">Phones</a>
                 <a href="#deals" className="hover:text-blue-500 transition-colors">Deals</a>
-                <a href="#compare" onClick={(e) => { e.preventDefault(); useStore.getState().setIsCompareOpen(true); }} className="hover:text-blue-500 transition-colors cursor-pointer">Compare</a>
                 <a href="#about" className="hover:text-blue-500 transition-colors">About</a>
               </div>
               
@@ -72,7 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({ searchTerm, setSearchTerm }) => 
                 )}
               </button>
 
-              {user && (
+              {user ? (
                 <div className="relative">
                   <button 
                     onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
@@ -87,10 +88,7 @@ export const Navbar: React.FC<NavbarProps> = ({ searchTerm, setSearchTerm }) => 
                     <div className="absolute right-0 mt-2 w-48 rounded-xl shadow-lg glass dark:glass-light ring-1 ring-black ring-opacity-5 z-50 overflow-hidden">
                       <div className="py-1">
                         <button className="flex w-full items-center px-4 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10">
-                          <User className="h-4 w-4 mr-2" /> My Orders
-                        </button>
-                        <button onClick={() => { setIsWishlistOpen(true); setIsUserDropdownOpen(false); }} className="flex w-full items-center px-4 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10">
-                          <Heart className="h-4 w-4 mr-2" /> Wishlist
+                          <User className="h-4 w-4 mr-2" /> My Profile
                         </button>
                         <button className="flex w-full items-center px-4 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10">
                           <Settings className="h-4 w-4 mr-2" /> Settings
@@ -102,6 +100,11 @@ export const Navbar: React.FC<NavbarProps> = ({ searchTerm, setSearchTerm }) => 
                     </div>
                   )}
                 </div>
+              ) : (
+                <button onClick={() => setIsAuthOpen(true)} className="hidden sm:flex items-center space-x-1 btn-glow px-4 py-2 rounded-full text-sm">
+                  <User className="h-4 w-4" />
+                  <span>Login</span>
+                </button>
               )}
 
               {/* Mobile menu button */}
@@ -112,6 +115,9 @@ export const Navbar: React.FC<NavbarProps> = ({ searchTerm, setSearchTerm }) => 
           </div>
         </div>
       </nav>
+
+      {/* Auth Modal */}
+      {isAuthOpen && <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />}
     </>
   );
 };

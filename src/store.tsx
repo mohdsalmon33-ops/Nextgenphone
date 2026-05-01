@@ -43,6 +43,9 @@ interface StoreContextType {
   // Toasts
   toasts: Toast[];
   addToast: (message: string, type?: 'success' | 'error' | 'info') => void;
+  currentPage: 'home' | 'refurbished' | 'trade-in' | 'profile' | 'track-order' | 'returns';
+  setCurrentPage: (page: 'home' | 'refurbished' | 'trade-in' | 'profile' | 'track-order' | 'returns') => void;
+
 }
 
 interface Toast {
@@ -80,6 +83,7 @@ export const StoreProvider: React.FC<{children: React.ReactNode}> = ({ children 
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState<'home' | 'refurbished' | 'trade-in' | 'profile' | 'track-order' | 'returns'>('home');
   
   const [toasts, setToasts] = useState<Toast[]>([]);
 
@@ -198,6 +202,7 @@ export const StoreProvider: React.FC<{children: React.ReactNode}> = ({ children 
       isWishlistOpen, setIsWishlistOpen,
       isCompareOpen, setIsCompareOpen,
       isCheckoutOpen, setIsCheckoutOpen,
+      currentPage, setCurrentPage,
       clearCart,
       toasts, addToast
     }}>

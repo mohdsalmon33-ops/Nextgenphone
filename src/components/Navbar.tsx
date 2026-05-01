@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useStore } from '../store';
-import { ShoppingCart, Heart, User, Search, Moon, Sun, Menu, X, LogOut, Settings } from 'lucide-react';
+import { ShoppingCart, Heart, User, Search, Moon, Sun, Menu, X, LogOut, Settings, RotateCcw } from 'lucide-react';
 import { AuthModal } from './AuthModal';
 
 interface NavbarProps {
@@ -9,7 +9,7 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ searchTerm, setSearchTerm }) => {
-  const { isDark, toggleTheme, cartCount, wishlist, setIsCartOpen, setIsWishlistOpen, user, logout } = useStore();
+  const { isDark, toggleTheme, cartCount, wishlist, setIsCartOpen, setIsWishlistOpen, user, logout, currentPage, setCurrentPage } = useStore();
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
@@ -21,18 +21,18 @@ export const Navbar: React.FC<NavbarProps> = ({ searchTerm, setSearchTerm }) => 
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
             <div className="flex-shrink-0 flex items-center">
-              <a href="#" className="font-heading font-bold text-2xl tracking-tighter text-gradient text-glow">
+              <button onClick={() => setCurrentPage('home')} className="font-heading font-bold text-2xl tracking-tighter text-gradient text-glow">
                 NexGen
-              </a>
+              </button>
             </div>
 
             {/* Desktop Navigation & Search */}
             <div className="hidden md:flex items-center space-x-8 flex-1 ml-12">
               <div className="flex space-x-6 text-sm font-medium">
-                <a href="#" className="hover:text-blue-500 transition-colors">Home</a>
-                <a href="#phones" className="hover:text-blue-500 transition-colors">Phones</a>
-                <a href="#deals" className="hover:text-blue-500 transition-colors">Deals</a>
-                <a href="#about" className="hover:text-blue-500 transition-colors">About</a>
+                <button onClick={() => setCurrentPage('home')} className={`transition-colors ${currentPage === 'home' ? 'text-violet-500 font-bold' : 'hover:text-violet-500'}`}>Home</button>
+                <button onClick={() => setCurrentPage('refurbished')} className={`transition-colors ${currentPage === 'refurbished' ? 'text-violet-500 font-bold' : 'hover:text-violet-500'}`}>Refurbished</button>
+                <button onClick={() => setCurrentPage('trade-in')} className={`transition-colors ${currentPage === 'trade-in' ? 'text-violet-500 font-bold' : 'hover:text-violet-500'}`}>Trade-In</button>
+                <button onClick={() => setCurrentPage('track-order')} className={`transition-colors ${currentPage === 'track-order' ? 'text-violet-500 font-bold' : 'hover:text-violet-500'}`}>Track Order</button>
               </div>
               
               <div className="flex-1 max-w-md relative">
@@ -87,13 +87,16 @@ export const Navbar: React.FC<NavbarProps> = ({ searchTerm, setSearchTerm }) => 
                   {isUserDropdownOpen && (
                     <div className="absolute right-0 mt-2 w-48 rounded-xl shadow-lg glass dark:glass-light ring-1 ring-black ring-opacity-5 z-50 overflow-hidden">
                       <div className="py-1">
-                        <button className="flex w-full items-center px-4 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10">
+                        <button onClick={() => { setCurrentPage('profile'); setIsUserDropdownOpen(false); }} className="flex w-full items-center px-4 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10">
                           <User className="h-4 w-4 mr-2" /> My Profile
+                        </button>
+                        <button onClick={() => { setCurrentPage('returns'); setIsUserDropdownOpen(false); }} className="flex w-full items-center px-4 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10">
+                          <RotateCcw className="h-4 w-4 mr-2" /> Returns
                         </button>
                         <button className="flex w-full items-center px-4 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10">
                           <Settings className="h-4 w-4 mr-2" /> Settings
                         </button>
-                        <button onClick={() => { logout(); setIsUserDropdownOpen(false); }} className="flex w-full items-center px-4 py-2 text-sm text-red-500 hover:bg-black/5 dark:hover:bg-white/10">
+                        <button onClick={() => { logout(); setIsUserDropdownOpen(false); setCurrentPage('home'); }} className="flex w-full items-center px-4 py-2 text-sm text-red-500 hover:bg-black/5 dark:hover:bg-white/10">
                           <LogOut className="h-4 w-4 mr-2" /> Sign out
                         </button>
                       </div>
@@ -115,6 +118,31 @@ export const Navbar: React.FC<NavbarProps> = ({ searchTerm, setSearchTerm }) => 
           </div>
         </div>
       </nav>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-30 pt-20 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl md:hidden flex flex-col items-center space-y-8 p-8 animate-in slide-in-from-top-4">
+          <button onClick={() => { setCurrentPage('home'); setIsMobileMenuOpen(false); }} className={`text-2xl font-bold ${currentPage === 'home' ? 'text-violet-500' : ''}`}>Home</button>
+          <button onClick={() => { setCurrentPage('refurbished'); setIsMobileMenuOpen(false); }} className={`text-2xl font-bold ${currentPage === 'refurbished' ? 'text-violet-500' : ''}`}>Refurbished</button>
+          <button onClick={() => { setCurrentPage('trade-in'); setIsMobileMenuOpen(false); }} className={`text-2xl font-bold ${currentPage === 'trade-in' ? 'text-violet-500' : ''}`}>Trade-In</button>
+          <button onClick={() => { setCurrentPage('track-order'); setIsMobileMenuOpen(false); }} className={`text-2xl font-bold ${currentPage === 'track-order' ? 'text-violet-500' : ''}`}>Track Order</button>
+          
+          <div className="w-full max-w-sm mt-8">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="block w-full pl-10 pr-3 py-3 rounded-full bg-black/5 dark:bg-white/5 focus:outline-none focus:ring-2 focus:ring-violet-500"
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Auth Modal */}
       {isAuthOpen && <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />}

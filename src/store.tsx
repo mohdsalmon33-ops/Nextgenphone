@@ -15,6 +15,7 @@ interface StoreContextType {
   cartCount: number;
   promoDiscount: number;
   applyPromo: (code: string) => string; // returns message
+  clearCart: () => void;
 
   // Wishlist
   wishlist: string[];
@@ -36,6 +37,8 @@ interface StoreContextType {
   setIsWishlistOpen: (open: boolean) => void;
   isCompareOpen: boolean;
   setIsCompareOpen: (open: boolean) => void;
+  isCheckoutOpen: boolean;
+  setIsCheckoutOpen: (open: boolean) => void;
   
   // Toasts
   toasts: Toast[];
@@ -76,6 +79,7 @@ export const StoreProvider: React.FC<{children: React.ReactNode}> = ({ children 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   
   const [toasts, setToasts] = useState<Toast[]>([]);
 
@@ -86,6 +90,11 @@ export const StoreProvider: React.FC<{children: React.ReactNode}> = ({ children 
     setTimeout(() => {
       setToasts(prev => prev.filter(t => t.id !== id));
     }, 3000);
+  };
+
+  const clearCart = () => {
+    setCart([]);
+    setPromoDiscount(0);
   };
 
   // Sync to local storage
@@ -188,6 +197,8 @@ export const StoreProvider: React.FC<{children: React.ReactNode}> = ({ children 
       isCartOpen, setIsCartOpen,
       isWishlistOpen, setIsWishlistOpen,
       isCompareOpen, setIsCompareOpen,
+      isCheckoutOpen, setIsCheckoutOpen,
+      clearCart,
       toasts, addToast
     }}>
       {children}

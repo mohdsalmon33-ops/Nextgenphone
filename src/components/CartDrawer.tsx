@@ -3,7 +3,7 @@ import { useStore } from '../store';
 import { X, Plus, Minus, Trash2 } from 'lucide-react';
 
 export const CartDrawer = () => {
-  const { isCartOpen, setIsCartOpen, cart, updateQuantity, removeFromCart, cartTotal, promoDiscount, applyPromo, addToast } = useStore();
+  const { isCartOpen, setIsCartOpen, cart, updateQuantity, removeFromCart, cartTotal, promoDiscount, applyPromo, addToast, setIsCheckoutOpen } = useStore();
   const [promoCode, setPromoCode] = React.useState('');
 
   const handleApplyPromo = () => {
@@ -101,7 +101,7 @@ export const CartDrawer = () => {
             </div>
 
             <button 
-              onClick={() => { addToast('Order placed successfully!', 'success'); setIsCartOpen(false); }}
+              onClick={() => { setIsCartOpen(false); setIsCheckoutOpen(true); }}
               className="w-full py-4 rounded-xl btn-glow text-lg"
             >
               Checkout Now

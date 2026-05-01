@@ -17,6 +17,7 @@ import { Features } from './components/Features';
 import { Testimonials } from './components/Testimonials';
 import { Newsletter } from './components/Newsletter';
 import { WishlistDrawer } from './components/WishlistDrawer';
+import { CheckoutModal } from './components/CheckoutModal';
 
 export default function App() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -179,6 +180,7 @@ export default function App() {
       {/* Overlays / Modals */}
       <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
       <CartDrawer />
+      <CheckoutModal />
       <WishlistDrawer onProductClick={setSelectedProduct} />
       <CompareSheet />
       <Toasts />
